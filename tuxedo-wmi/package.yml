@@ -15,7 +15,7 @@ builddeps:
   - kernel-headers
 setup      : |
     cd src
-    KERNEL_VERSION="4.4.0"
+    KERNEL_VERSION="4.4.4"
 #
 # M=$(pwd) fixes a weird bug. Without it mysterious error occurs.
 #
@@ -29,6 +29,6 @@ setup      : |
     %make -C /lib/modules/$KERNEL_VERSION/build M=$(pwd)
 install    : |
     cd src
-    KERNEL_VERSION="4.4.0"
+    KERNEL_VERSION="4.4.4"
     %make_install KDIR=/lib/modules/$KERNEL_VERSION/build
     install -D -m 755 tuxedo-wmi.ko %installroot%/lib/modules/${KERNEL_VERSION}/kernel/drivers/firmware/tuxedo-wmi.ko
