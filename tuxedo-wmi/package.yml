@@ -1,0 +1,34 @@
+name        : tuxedo-wmi
+version     : 0.5.1
+release     : 1
+source     :
+    - http://www.linux-onlineshop.de/forum/index.php?page=Attachment&attachmentID=424&h=3df4c21145314ceaeadd7986662b2a5b01d1094f&s=a68846b36eea8e31bfe578f1a5b8014b5836c154 : a39c6830bd07f7cbfc86162c82037132aa99dea46d652d0053b48f268730debe
+license     :
+    - GPL-2.0
+homepage: chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html#uri=http://www.linux-onlineshop.de/forum/index.php?page=Thread&threadID=26
+summary     : Kernel module for Clevo PM1xSM laptops. Handles keyboard backlight and airplane mode led.
+description : |
+  Kernel module for Clevo PM1xSM laptops. Handles keyboard backlight and airplane mode led.
+clang: yes
+builddeps:
+  - kernel-modules
+  - kernel-headers
+setup      : |
+    cd src
+    KERNEL_VERSION="4.4.0"
+#
+# M=$(pwd) fixes a weird bug. Without it mysterious error occurs.
+#
+# scripts/kconfig/conf  --silentoldconfig Kconfig
+# make[1]: *** No rule to make target 'arch/x86/entry/syscalls/syscall_32.tbl', needed by 'arch/x86/entry/syscalls/../../include/generated/asm/syscalls_32.h'.  Stop.
+# arch/x86/Makefile:199: recipe for target 'archheaders' failed
+# make: *** [archheaders] Error 2
+#
+# Why 32? Nobody knows...
+#
+    %make -C /lib/modules/$KERNEL_VERSION/build M=$(pwd)
+install    : |
+    cd src
+    KERNEL_VERSION="4.4.0"
+    %make_install KDIR=/lib/modules/$KERNEL_VERSION/build
+    install -D -m 755 tuxedo-wmi.ko %installroot%/lib/modules/${KERNEL_VERSION}/kernel/drivers/firmware/tuxedo-wmi.ko
